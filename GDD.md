@@ -29,5 +29,10 @@ Se busca tener un  PMV y poco más, ni siquiera se plantea ni un sistema de punt
 
 Tampoco se plantea ningun tipo de elemento sonoro ni de interfaz en el juego
 ***
-## Asignación de tareas
+## Asignación de tareasç## Asignación de tareas
+- Adela: Project Manager
+- Daniel: Developer
+- Martín: Lead Developer
+- Héctor: Tester/QA and Documenter
+- Hugo: Tester/QA and Documenter
 ***
