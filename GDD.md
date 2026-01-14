@@ -1,7 +1,7 @@
-Visión general / Concept
-## Esquema de controles
-## Apartado gráfico
-## GamePlay
+## Visión general / Concept
 ## Historial de versiones
-## Asignación de tareas
+## Esquema de controles
+## Gameplay
+## Apartado gráfico
 ## Scope
+## Asignación de tareas
