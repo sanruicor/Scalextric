@@ -1,7 +1,2 @@
-Visión general / Concept
-## Esquema de controles
-## Apartado gráfico
 ## GamePlay
-## Historial de versiones
-## Asignación de tareas
-## Scope
+El juego se basará en un circuito, el jugador con un vehículo tratará de dar vueltas por la pista sin salir de la pista. Si el jugador se sale de la pista perderá la partida y tendrá que reintentarlo.
