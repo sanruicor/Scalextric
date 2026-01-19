@@ -27,9 +27,7 @@ public class Car : MonoBehaviour
     {
         if (Keyboard.current.spaceKey.isPressed)
         {
-            Debug.Log("Se pulsa");
             moveSpeed = Mathf.MoveTowards(moveSpeed, maxSpeed, acceleration * Time.deltaTime);
-
         }
 
         if (!Keyboard.current.spaceKey.isPressed)
@@ -64,7 +62,5 @@ public class Car : MonoBehaviour
             float movement = moveSpeed * Time.deltaTime / splineLength;
             currentDistance += movement;
         }
-        Debug.Log(moveSpeed);
-
     }
 }
