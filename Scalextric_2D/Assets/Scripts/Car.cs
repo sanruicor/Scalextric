@@ -15,6 +15,8 @@ public class Car : MonoBehaviour
     private float deacceleration = 10f;
     private float minSpeed = 0f;
     private bool gameOver = false;
+    private bool offTrack = false;
+    private Vector3 offTrackDirection;
 
     public SplineContainer spline;
     private float currentDistance = 0f;
@@ -41,7 +43,8 @@ public class Car : MonoBehaviour
         }
         if (gameOver)
         {
-            moveSpeed = Mathf.MoveTowards(moveSpeed, minSpeed, deacceleration * Time.deltaTime);
+            moveSpeed = Mathf.MoveTowards(moveSpeed, minSpeed, (15f+deacceleration) * Time.deltaTime);
+            transform.position += offTrackDirection * moveSpeed * Time.deltaTime;
         }
 
 
@@ -87,6 +90,9 @@ public class Car : MonoBehaviour
     void GameOver()
     {
         gameOver = true;
+        offTrack = true;
+
+        offTrackDirection = transform.forward;
         Debug.Log("Perdiste");
     }
 }
