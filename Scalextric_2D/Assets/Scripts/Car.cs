@@ -5,6 +5,7 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Splines;
+using TMPro;
 
 public class Car : MonoBehaviour
 {
@@ -13,6 +14,9 @@ public class Car : MonoBehaviour
     private float acceleration = 12f;
     private float deacceleration = 15f;
     private float minSpeed = 0f;
+
+    [SerializeField] TextMeshProUGUI vueltasContadas;
+    public int vueltas;
     
     public SplineContainer spline;
     private float currentDistance = 0f;
@@ -25,6 +29,7 @@ public class Car : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        ContadorVueltas();
         if (Keyboard.current.spaceKey.isPressed)
         {
             moveSpeed = Mathf.MoveTowards(moveSpeed, maxSpeed, acceleration * Time.deltaTime);
@@ -62,5 +67,14 @@ public class Car : MonoBehaviour
             float movement = moveSpeed * Time.deltaTime / splineLength;
             currentDistance += movement;
         }
+    }
+
+    public void ContadorVueltas()
+    {
+        vueltasContadas.text=$"Vueltas:{vueltas}";
+    }
+    void OnTriggerEnter(Collider collision)
+    {
+        if (collision.CompareTag("Finish")) {vueltas++;}
     }
 }
