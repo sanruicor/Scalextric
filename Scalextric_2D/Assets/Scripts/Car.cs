@@ -9,10 +9,10 @@ using UnityEngine.Splines;
 public class Car : MonoBehaviour
 {
     private float moveSpeed = 0f;
-    private float maxSpeed = 50f;
-    private float limitSpeed = 40f;
-    private float acceleration = 12f;
-    private float deacceleration = 15f;
+    private float maxSpeed = 40f;
+    private float limitSpeed = 30f;
+    private float acceleration = 8f;
+    private float deacceleration = 10f;
     private float minSpeed = 0f;
     private bool gameOver = false;
 
@@ -38,6 +38,10 @@ public class Car : MonoBehaviour
                 moveSpeed = Mathf.MoveTowards(moveSpeed, minSpeed, deacceleration * Time.deltaTime);
             }
             Debug.Log(moveSpeed);
+        }
+        if (gameOver)
+        {
+            moveSpeed = Mathf.MoveTowards(moveSpeed, minSpeed, deacceleration * Time.deltaTime);
         }
 
 
@@ -84,6 +88,5 @@ public class Car : MonoBehaviour
     {
         gameOver = true;
         Debug.Log("Perdiste");
-        moveSpeed = Mathf.MoveTowards(moveSpeed, minSpeed, deacceleration * Time.deltaTime);
     }
 }
