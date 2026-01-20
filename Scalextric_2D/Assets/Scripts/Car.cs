@@ -10,10 +10,12 @@ public class Car : MonoBehaviour
 {
     private float moveSpeed = 0f;
     private float maxSpeed = 50f;
+    private float limitSpeed = 40f;
     private float acceleration = 12f;
     private float deacceleration = 15f;
     private float minSpeed = 0f;
-    
+    private bool gameOver = false;
+
     public SplineContainer spline;
     private float currentDistance = 0f;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -25,15 +27,21 @@ public class Car : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Keyboard.current.spaceKey.isPressed)
+        if (!gameOver)
         {
-            moveSpeed = Mathf.MoveTowards(moveSpeed, maxSpeed, acceleration * Time.deltaTime);
+            if (Keyboard.current.spaceKey.isPressed)
+            {
+                moveSpeed = Mathf.MoveTowards(moveSpeed, maxSpeed, acceleration * Time.deltaTime);
+            }
+            if (!Keyboard.current.spaceKey.isPressed)
+            {
+                moveSpeed = Mathf.MoveTowards(moveSpeed, minSpeed, deacceleration * Time.deltaTime);
+            }
+            Debug.Log(moveSpeed);
         }
 
-        if (!Keyboard.current.spaceKey.isPressed)
-        {
-            moveSpeed = Mathf.MoveTowards(moveSpeed, minSpeed, deacceleration * Time.deltaTime);
-        }
+
+
 
         // Calculate the target position on the spline
         Vector3 targetPosition = spline.EvaluatePosition(currentDistance);
@@ -62,5 +70,20 @@ public class Car : MonoBehaviour
             float movement = moveSpeed * Time.deltaTime / splineLength;
             currentDistance += movement;
         }
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("SalidaPista") && moveSpeed > limitSpeed)
+        {
+            GameOver();
+        }
+    }
+
+    void GameOver()
+    {
+        gameOver = true;
+        Debug.Log("Perdiste");
+        moveSpeed = Mathf.MoveTowards(moveSpeed, minSpeed, deacceleration * Time.deltaTime);
     }
 }
