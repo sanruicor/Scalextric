@@ -24,6 +24,14 @@ public class Car : MonoBehaviour
 
     public SplineContainer spline;
     private float currentDistance = 0f;
+    private int minutes, seconds, cents;
+    private float timeElapsed;
+    [SerializeField] private TMP_Text cronometroText;
+    [SerializeField] public TMP_Text bestlapText;
+    [SerializeField] public TMP_Text lastlapText;
+    private float bestLap = Mathf.Infinity;
+    private float lastLap = 0f;
+    //public bool pasoPorMeta = false;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -34,6 +42,7 @@ public class Car : MonoBehaviour
     void Update()
     {
         ContadorVueltas();
+        Cronometro();
         if (!gameOver)
         {
             if (Keyboard.current.spaceKey.isPressed)
@@ -87,14 +96,26 @@ public class Car : MonoBehaviour
     public void ContadorVueltas()
     {
         vueltasContadas.text=$"Vueltas:{vueltas}";
+        //pasoPorMeta = true;
     }
-    void OnTriggerEnter(Collider collision)
+
+    public void Cronometro()
     {
-        if (collision.CompareTag("Finish")) {vueltas++;}
+        timeElapsed += Time.deltaTime;
+        
+        cronometroText.text = TimeFormat(timeElapsed);
     }
+
 
     void OnTriggerEnter(Collider other)
     {
+        if (other.CompareTag("Finish")) 
+        {
+            vueltas++;
+
+            RegistrarVuelta();
+        }
+
         if (other.CompareTag("SalidaPista") && moveSpeed > limitSpeed)
         {
             GameOver();
@@ -108,5 +129,25 @@ public class Car : MonoBehaviour
 
         offTrackDirection = transform.forward;
         Debug.Log("Perdiste");
+    }
+    public void RegistrarVuelta()
+    {
+        lastLap = timeElapsed;
+        lastlapText.text = "Last: " + TimeFormat(lastLap);
+
+        if (lastLap < bestLap)
+        {
+            bestLap = lastLap;
+            bestlapText.text = "Best: " + TimeFormat(bestLap);
+        }
+        timeElapsed = 0f;
+    }  
+    private string TimeFormat(float t)
+    {
+        minutes = (int)(timeElapsed / 60f);
+        seconds = (int)(timeElapsed - minutes * 60f);
+        cents = (int)((timeElapsed - (int)timeElapsed) * 100f);
+
+        return string.Format("{0:00}:{1:00}:{2:00}", minutes, seconds, cents);;
     }
 }
