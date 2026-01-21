@@ -88,13 +88,12 @@ public class Car : MonoBehaviour
     {
         vueltasContadas.text=$"Vueltas:{vueltas}";
     }
-    void OnTriggerEnter(Collider collision)
-    {
-        if (collision.CompareTag("Finish")) {vueltas++;}
-    }
+
 
     void OnTriggerEnter(Collider other)
     {
+        if (other.CompareTag("Finish")) {vueltas++;}
+
         if (other.CompareTag("SalidaPista") && moveSpeed > limitSpeed)
         {
             GameOver();
