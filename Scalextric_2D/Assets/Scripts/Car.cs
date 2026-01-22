@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Splines;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class Car : MonoBehaviour
 {
@@ -15,13 +16,10 @@ public class Car : MonoBehaviour
     private float acceleration = 8f;
     private float deacceleration = 10f;
     private float minSpeed = 0f;
-
     [SerializeField] TextMeshProUGUI vueltasContadas;
     public int vueltas;
-    private bool gameOver = false;
-    private bool offTrack = false;
+    public bool gameOver = false;
     private Vector3 offTrackDirection;
-
     public SplineContainer spline;
     private float currentDistance = 0f;
     private int minutes, seconds, cents;
@@ -31,20 +29,28 @@ public class Car : MonoBehaviour
     [SerializeField] public TMP_Text lastlapText;
     private float bestLap = Mathf.Infinity;
     private float lastLap = 0f;
-    //public bool pasoPorMeta = false;
+    [SerializeField] private GameObject coche;
+    [SerializeField] private GameObject gameOverPanel;
+
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        coche.GetComponent<GameObject>();
 
+        gameOverPanel.GetComponent<GameObject>();
+        gameOverPanel.SetActive(false);
     }
 
     // Update is called once per frame
     void Update()
     {
         ContadorVueltas();
-        Cronometro();
+
         if (!gameOver)
         {
+            Cronometro();
+
             if (Keyboard.current.spaceKey.isPressed)
             {
                 moveSpeed = Mathf.MoveTowards(moveSpeed, maxSpeed, acceleration * Time.deltaTime);
@@ -53,16 +59,20 @@ public class Car : MonoBehaviour
             {
                 moveSpeed = Mathf.MoveTowards(moveSpeed, minSpeed, deacceleration * Time.deltaTime);
             }
-            Debug.Log(moveSpeed);
         }
+
         if (gameOver)
         {
-            moveSpeed = Mathf.MoveTowards(moveSpeed, minSpeed, (15f+deacceleration) * Time.deltaTime);
+            moveSpeed = Mathf.MoveTowards(moveSpeed, minSpeed, (15f + deacceleration) * Time.deltaTime);
             transform.position += offTrackDirection * moveSpeed * Time.deltaTime;
+
+            cronometroText.text = TimeFormat(timeElapsed);
+
+            if (Keyboard.current.rKey.wasPressedThisFrame)
+            {
+                Restart();
+            }
         }
-
-
-
 
         // Calculate the target position on the spline
         Vector3 targetPosition = spline.EvaluatePosition(currentDistance);
@@ -93,23 +103,22 @@ public class Car : MonoBehaviour
         }
     }
 
-    public void ContadorVueltas()
+    private void ContadorVueltas()
     {
-        vueltasContadas.text=$"Vueltas:{vueltas}";
-        //pasoPorMeta = true;
+        vueltasContadas.text = $"Vueltas:{vueltas}";
     }
 
     public void Cronometro()
     {
         timeElapsed += Time.deltaTime;
-        
+
         cronometroText.text = TimeFormat(timeElapsed);
     }
 
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Finish")) 
+        if (other.CompareTag("Finish"))
         {
             vueltas++;
 
@@ -125,11 +134,18 @@ public class Car : MonoBehaviour
     void GameOver()
     {
         gameOver = true;
-        offTrack = true;
 
         offTrackDirection = transform.forward;
-        Debug.Log("Perdiste");
+        gameOverPanel.SetActive(true);
     }
+
+    void Restart()
+    {
+        gameOver = false;
+        gameOverPanel.SetActive(false);
+        SceneManager.LoadScene("SampleScene");
+    }
+
     public void RegistrarVuelta()
     {
         lastLap = timeElapsed;
@@ -140,14 +156,16 @@ public class Car : MonoBehaviour
             bestLap = lastLap;
             bestlapText.text = "Best: " + TimeFormat(bestLap);
         }
+
         timeElapsed = 0f;
-    }  
+    }
+    
     private string TimeFormat(float t)
     {
         minutes = (int)(timeElapsed / 60f);
         seconds = (int)(timeElapsed - minutes * 60f);
         cents = (int)((timeElapsed - (int)timeElapsed) * 100f);
 
-        return string.Format("{0:00}:{1:00}:{2:00}", minutes, seconds, cents);;
+        return string.Format("{0:00}:{1:00}:{2:00}", minutes, seconds, cents); ;
     }
 }
