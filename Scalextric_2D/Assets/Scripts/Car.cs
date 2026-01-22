@@ -18,8 +18,7 @@ public class Car : MonoBehaviour
 
     [SerializeField] TextMeshProUGUI vueltasContadas;
     public int vueltas;
-    private bool gameOver = false;
-    private bool offTrack = false;
+    public bool gameOver = false;
     private Vector3 offTrackDirection;
 
     public SplineContainer spline;
@@ -31,12 +30,15 @@ public class Car : MonoBehaviour
     [SerializeField] public TMP_Text lastlapText;
     private float bestLap = Mathf.Infinity;
     private float lastLap = 0f;
-    private float lastTime;
+
+    [SerializeField] private GameObject gameOverPanel;
+    
     //public bool pasoPorMeta = false;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-
+        gameOverPanel.GetComponent<GameObject>();
+        gameOverPanel.SetActive(false);
     }
 
     // Update is called once per frame
@@ -122,15 +124,16 @@ public class Car : MonoBehaviour
         if (other.CompareTag("SalidaPista") && moveSpeed > limitSpeed)
         {
             GameOver();
+            Debug.Log("tellamasono");
         }
     }
 
     void GameOver()
     {
         gameOver = true;
-        offTrack = true;
 
         offTrackDirection = transform.forward;
+        gameOverPanel.SetActive(true);
     }
     public void RegistrarVuelta()
     {
