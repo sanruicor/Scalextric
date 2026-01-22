@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Splines;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class Car : MonoBehaviour
 {
@@ -15,12 +16,10 @@ public class Car : MonoBehaviour
     private float acceleration = 8f;
     private float deacceleration = 10f;
     private float minSpeed = 0f;
-
     [SerializeField] TextMeshProUGUI vueltasContadas;
     public int vueltas;
     public bool gameOver = false;
     private Vector3 offTrackDirection;
-
     public SplineContainer spline;
     private float currentDistance = 0f;
     private int minutes, seconds, cents;
@@ -30,16 +29,14 @@ public class Car : MonoBehaviour
     [SerializeField] public TMP_Text lastlapText;
     private float bestLap = Mathf.Infinity;
     private float lastLap = 0f;
-
     [SerializeField] private GameObject coche;
     [SerializeField] private GameObject gameOverPanel;
-    private Vector3 startPosition;
-    
+
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         coche.GetComponent<GameObject>();
-        startPosition = coche.transform.position;
 
         gameOverPanel.GetComponent<GameObject>();
         gameOverPanel.SetActive(false);
@@ -53,6 +50,7 @@ public class Car : MonoBehaviour
         if (!gameOver)
         {
             Cronometro();
+
             if (Keyboard.current.spaceKey.isPressed)
             {
                 moveSpeed = Mathf.MoveTowards(moveSpeed, maxSpeed, acceleration * Time.deltaTime);
@@ -75,9 +73,6 @@ public class Car : MonoBehaviour
                 Restart();
             }
         }
-
-
-
 
         // Calculate the target position on the spline
         Vector3 targetPosition = spline.EvaluatePosition(currentDistance);
@@ -147,11 +142,10 @@ public class Car : MonoBehaviour
     void Restart()
     {
         gameOver = false;
-
-        coche.transform.position = startPosition;
         gameOverPanel.SetActive(false);
-        cronometroText.text = TimeFormat(0);
+        SceneManager.LoadScene("SampleScene");
     }
+
     public void RegistrarVuelta()
     {
         lastLap = timeElapsed;
@@ -162,8 +156,10 @@ public class Car : MonoBehaviour
             bestLap = lastLap;
             bestlapText.text = "Best: " + TimeFormat(bestLap);
         }
+
         timeElapsed = 0f;
     }
+    
     private string TimeFormat(float t)
     {
         minutes = (int)(timeElapsed / 60f);
