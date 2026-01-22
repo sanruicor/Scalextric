@@ -31,6 +31,7 @@ public class Car : MonoBehaviour
     [SerializeField] public TMP_Text lastlapText;
     private float bestLap = Mathf.Infinity;
     private float lastLap = 0f;
+    private float lastTime;
     //public bool pasoPorMeta = false;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -42,9 +43,10 @@ public class Car : MonoBehaviour
     void Update()
     {
         ContadorVueltas();
-        Cronometro();
+
         if (!gameOver)
         {
+            Cronometro();
             if (Keyboard.current.spaceKey.isPressed)
             {
                 moveSpeed = Mathf.MoveTowards(moveSpeed, maxSpeed, acceleration * Time.deltaTime);
@@ -53,12 +55,14 @@ public class Car : MonoBehaviour
             {
                 moveSpeed = Mathf.MoveTowards(moveSpeed, minSpeed, deacceleration * Time.deltaTime);
             }
-            Debug.Log(moveSpeed);
         }
+
         if (gameOver)
         {
-            moveSpeed = Mathf.MoveTowards(moveSpeed, minSpeed, (15f+deacceleration) * Time.deltaTime);
+            moveSpeed = Mathf.MoveTowards(moveSpeed, minSpeed, (15f + deacceleration) * Time.deltaTime);
             transform.position += offTrackDirection * moveSpeed * Time.deltaTime;
+
+            cronometroText.text = TimeFormat(timeElapsed);
         }
 
 
@@ -95,21 +99,20 @@ public class Car : MonoBehaviour
 
     public void ContadorVueltas()
     {
-        vueltasContadas.text=$"Vueltas:{vueltas}";
-        //pasoPorMeta = true;
+        vueltasContadas.text = $"Vueltas:{vueltas}";
     }
 
     public void Cronometro()
     {
         timeElapsed += Time.deltaTime;
-        
+
         cronometroText.text = TimeFormat(timeElapsed);
     }
 
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Finish")) 
+        if (other.CompareTag("Finish"))
         {
             vueltas++;
 
@@ -128,7 +131,6 @@ public class Car : MonoBehaviour
         offTrack = true;
 
         offTrackDirection = transform.forward;
-        Debug.Log("Perdiste");
     }
     public void RegistrarVuelta()
     {
@@ -141,13 +143,13 @@ public class Car : MonoBehaviour
             bestlapText.text = "Best: " + TimeFormat(bestLap);
         }
         timeElapsed = 0f;
-    }  
+    }
     private string TimeFormat(float t)
     {
         minutes = (int)(timeElapsed / 60f);
         seconds = (int)(timeElapsed - minutes * 60f);
         cents = (int)((timeElapsed - (int)timeElapsed) * 100f);
 
-        return string.Format("{0:00}:{1:00}:{2:00}", minutes, seconds, cents);;
+        return string.Format("{0:00}:{1:00}:{2:00}", minutes, seconds, cents); ;
     }
 }
