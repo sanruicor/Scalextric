@@ -31,12 +31,16 @@ public class Car : MonoBehaviour
     private float bestLap = Mathf.Infinity;
     private float lastLap = 0f;
 
+    [SerializeField] private GameObject coche;
     [SerializeField] private GameObject gameOverPanel;
+    private Vector3 startPosition;
     
-    //public bool pasoPorMeta = false;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        coche.GetComponent<GameObject>();
+        startPosition = coche.transform.position;
+
         gameOverPanel.GetComponent<GameObject>();
         gameOverPanel.SetActive(false);
     }
@@ -65,6 +69,11 @@ public class Car : MonoBehaviour
             transform.position += offTrackDirection * moveSpeed * Time.deltaTime;
 
             cronometroText.text = TimeFormat(timeElapsed);
+
+            if (Keyboard.current.rKey.wasPressedThisFrame)
+            {
+                Restart();
+            }
         }
 
 
@@ -99,7 +108,7 @@ public class Car : MonoBehaviour
         }
     }
 
-    public void ContadorVueltas()
+    private void ContadorVueltas()
     {
         vueltasContadas.text = $"Vueltas:{vueltas}";
     }
@@ -124,7 +133,6 @@ public class Car : MonoBehaviour
         if (other.CompareTag("SalidaPista") && moveSpeed > limitSpeed)
         {
             GameOver();
-            Debug.Log("tellamasono");
         }
     }
 
@@ -134,6 +142,15 @@ public class Car : MonoBehaviour
 
         offTrackDirection = transform.forward;
         gameOverPanel.SetActive(true);
+    }
+
+    void Restart()
+    {
+        gameOver = false;
+
+        coche.transform.position = startPosition;
+        gameOverPanel.SetActive(false);
+        cronometroText.text = TimeFormat(0);
     }
     public void RegistrarVuelta()
     {
