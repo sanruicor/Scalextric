@@ -53,7 +53,7 @@ El coche tiene un sprite, elementos de interfaz, y es capaz de moverse. Así com
 
 La pista tiene carretera y cuando el coche se pase de velocidad en ciertas curvas pasara a la tierra, es decir fuera de la pista. Cuando el jugador se salga de la pista se mostrará una pantalla de Game Over en el que el jugador tendrá que reiniciar la partida.
 ***
-## Asignación de tareasç## Asignación de tareas
+## Asignación de tareas
 - Adela: Project Manager
 - Daniel: Developer
 - Martín: Lead Developer
